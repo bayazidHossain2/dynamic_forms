@@ -1,5 +1,6 @@
-import 'package:dynamic_forms/core/services/json_loader/json_loader_service.dart';
+import 'package:dynamic_forms/features/form_list/presentation/bloc/dynamic_form_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FormListPage extends StatefulWidget {
   const FormListPage({super.key});
@@ -10,22 +11,34 @@ class FormListPage extends StatefulWidget {
 
 class _FormListPageState extends State<FormListPage> {
   bool isLoading = true;
-  List<dynamic> formList = [];
 
   @override
   void initState() {
     super.initState();
-    _asyncInit();
+    // _asyncInit();
+    context.read<DynamicFormBloc>().add(DynamicFormGetAllJsonFormsEvent());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Center(child: Text('Form List'))),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: formList.length,
+      body: BlocConsumer<DynamicFormBloc, DynamicFormState>(
+        listener: (context, state) {
+          if (state is DynamicFormFailureState) {
+            // showSnackBar(
+            // context: context,
+            // message: state.message,
+            // backgroundColor: AppPallete.dangerColor,
+            // );
+          }
+        },
+        builder: (context, state) {
+          if (state is DynamicFormLoadingState) {
+            return CircularProgressIndicator();
+          } else if (state is DynamicFormGetAllSuccessState) {
+            return ListView.builder(
+              itemCount: state.dynamicFormList.length,
               itemBuilder: (context, index) => Container(
                 margin: EdgeInsets.symmetric(vertical: 4),
                 child: Card(
@@ -33,23 +46,18 @@ class _FormListPageState extends State<FormListPage> {
                   child: ListTile(
                     leading: CircleAvatar(
                       backgroundColor: Colors.green.shade100,
-                      child: Text(formList[index]['id'].toString()),
+                      child: Text(state.dynamicFormList[index].id.toString()),
                     ),
-                    title: Text(formList[index]['formName']),
+                    title: Text(state.dynamicFormList[index].formName),
                   ),
                 ),
               ),
-            ),
+            );
+          } else {
+            return Center(child: Text('Some thing wrong'));
+          }
+        },
+      ),
     );
-  }
-
-  void _asyncInit() async {
-    for (int i = 1; i <= 3; i++) {
-      final json = await JsonLoaderService.load(fileName: 'form_$i');
-      formList.add(json);
-    }
-    setState(() {
-      isLoading = false;
-    });
   }
 }
