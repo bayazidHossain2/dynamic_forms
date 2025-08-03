@@ -1,3 +1,5 @@
+import 'package:dynamic_forms/core/services/pdf_generator/pdf_generator_service.dart';
+import 'package:dynamic_forms/core/utils/snackbar.dart';
 import 'package:dynamic_forms/features/form_list/presentation/widgets/image_list_view_widget.dart';
 import 'package:flutter/material.dart';
 import '../../domain/entities/dynamic_form.dart';
@@ -89,7 +91,21 @@ class FormViewPage extends StatelessWidget {
               },
             ),
             const SizedBox(height: 16),
-            CustomButton(onPressed: () async {}, text: 'Save'),
+            CustomButton(
+              onPressed: () async {
+                final generator = PdfGeneratorService(
+                  dynamicForm: dynamicForm,
+                  controllerMap: controllerMap,
+                );
+                final path = await generator.generateAndSavePDF(context);
+                Snackbar.show(
+                  context: context,
+                  message: 'Pdf save success at : $path',
+                  backgroundColor: Colors.green,
+                );
+              },
+              text: 'Save',
+            ),
             const SizedBox(height: 16),
           ],
         ),
