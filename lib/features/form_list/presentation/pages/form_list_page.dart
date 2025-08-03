@@ -1,4 +1,7 @@
+import 'package:dynamic_forms/core/theme/app_pallete.dart';
+import 'package:dynamic_forms/core/utils/snackbar.dart';
 import 'package:dynamic_forms/features/form_list/presentation/bloc/dynamic_form_bloc.dart';
+import 'package:dynamic_forms/features/form_list/presentation/pages/form_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,11 +29,11 @@ class _FormListPageState extends State<FormListPage> {
       body: BlocConsumer<DynamicFormBloc, DynamicFormState>(
         listener: (context, state) {
           if (state is DynamicFormFailureState) {
-            // showSnackBar(
-            // context: context,
-            // message: state.message,
-            // backgroundColor: AppPallete.dangerColor,
-            // );
+            Snackbar.show(
+              context: context,
+              message: state.message,
+              backgroundColor: AppPallete.dangerColor,
+            );
           }
         },
         builder: (context, state) {
@@ -44,6 +47,16 @@ class _FormListPageState extends State<FormListPage> {
                 child: Card(
                   color: Colors.green.shade50,
                   child: ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FormPage(
+                            dynamicForm: state.dynamicFormList[index],
+                          ),
+                        ),
+                      );
+                    },
                     leading: CircleAvatar(
                       backgroundColor: Colors.green.shade100,
                       child: Text(state.dynamicFormList[index].id.toString()),
