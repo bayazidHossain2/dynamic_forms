@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 
 class CustomTextFormFieldWithLabelWidget extends StatelessWidget {
   final FieldProperties properties;
+  final TextEditingController controller;
 
   const CustomTextFormFieldWithLabelWidget({
     super.key,
     required this.properties,
+    required this.controller,
   });
 
   @override
@@ -23,7 +25,7 @@ class CustomTextFormFieldWithLabelWidget extends StatelessWidget {
           ),
           SizedBox(height: 4),
           TextFormField(
-            controller: TextEditingController(),
+            controller: controller,
             keyboardType: properties.type == 'text'
                 ? TextInputType.text
                 : TextInputType.number,

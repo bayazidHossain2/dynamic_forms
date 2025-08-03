@@ -7,8 +7,13 @@ import 'package:image_picker/image_picker.dart';
 
 class CustomImagePickerWidget extends StatefulWidget {
   final FieldProperties fieldProperties;
+  final List<Uint8List> imageController;
 
-  const CustomImagePickerWidget({super.key, required this.fieldProperties});
+  const CustomImagePickerWidget({
+    super.key,
+    required this.fieldProperties,
+    required this.imageController,
+  });
 
   @override
   State<CustomImagePickerWidget> createState() =>
@@ -17,7 +22,6 @@ class CustomImagePickerWidget extends StatefulWidget {
 
 class _CustomImagePickerWidgetState extends State<CustomImagePickerWidget> {
   final controller = TextEditingController();
-  List<Uint8List> imageDataList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -131,11 +135,11 @@ class _CustomImagePickerWidgetState extends State<CustomImagePickerWidget> {
     print('\n path is : pickedFile.path');
     final bytes = await pickedFile.readAsBytes();
     if (!widget.fieldProperties.multiImage!) {
-      imageDataList.clear();
+      widget.imageController.clear();
     }
-    imageDataList.add(bytes);
+    widget.imageController.add(bytes);
     setState(() {
-      controller.text = '${imageDataList.length} image added';
+      controller.text = '${widget.imageController.length} image added';
     });
     // await _sendToServer(base64Encode(bytes));
     // return base64Encode(bytes);

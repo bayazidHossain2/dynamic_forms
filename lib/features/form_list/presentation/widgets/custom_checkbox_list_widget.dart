@@ -5,8 +5,13 @@ import 'package:flutter/cupertino.dart';
 
 class CustomCheckboxListWidget extends StatefulWidget {
   final FieldProperties fieldProperties;
+  final List<BoolController> controller;
 
-  const CustomCheckboxListWidget({super.key, required this.fieldProperties});
+  const CustomCheckboxListWidget({
+    super.key,
+    required this.fieldProperties,
+    required this.controller,
+  });
 
   @override
   State<CustomCheckboxListWidget> createState() =>
@@ -14,14 +19,9 @@ class CustomCheckboxListWidget extends StatefulWidget {
 }
 
 class _CustomCheckboxListWidgetState extends State<CustomCheckboxListWidget> {
-  List<BoolController> controllerList = [];
-
   @override
   void initState() {
     super.initState();
-    for (int i = 0; i < widget.fieldProperties.listItems!.length; i++) {
-      controllerList.add(BoolController());
-    }
   }
 
   @override
@@ -42,7 +42,7 @@ class _CustomCheckboxListWidgetState extends State<CustomCheckboxListWidget> {
             itemCount: widget.fieldProperties.listItems?.length,
             itemBuilder: (context, index) => CustomCheckboxWidget(
               text: widget.fieldProperties.listItems![index].name,
-              controller: controllerList[index],
+              controller: widget.controller[index],
             ),
           ),
         ],

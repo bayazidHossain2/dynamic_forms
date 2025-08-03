@@ -5,8 +5,13 @@ import 'package:flutter/material.dart';
 
 class CustomDropdownWidget extends StatefulWidget {
   final FieldProperties properties;
+  final TextEditingController controller;
 
-  const CustomDropdownWidget({super.key, required this.properties});
+  const CustomDropdownWidget({
+    super.key,
+    required this.properties,
+    required this.controller,
+  });
 
   @override
   State<CustomDropdownWidget> createState() => _CustomDropdownWidgetState();
@@ -43,59 +48,55 @@ class _CustomDropdownWidgetState extends State<CustomDropdownWidget> {
                   : Border.all(color: Colors.grey, width: 1),
               borderRadius: const BorderRadius.all(Radius.circular(8)),
             ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButtonFormField<String>(
-                isExpanded: true,
-                validator: (value) =>
-                    value == null ? "Please select an option" : null,
-                value: _selectedItem,
-                hint: widget.properties.hintText == null
-                    ? null
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 4.0,
-                          horizontal: 8.0,
-                        ),
-                        child: Text(widget.properties.hintText!),
-                      ),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedItem = newValue; // Update the selected value
-                  });
-                },
-                selectedItemBuilder: (BuildContext context) {
-                  return widget.properties.listItems!
-                      .map<DropdownMenuItem<String>>((ListItem item) {
-                        return DropdownMenuItem<String>(
-                          value: item.value.toString(),
-                          child: Container(
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              item.name,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        );
-                      })
-                      .toList();
-                },
-                items: widget.properties.listItems!
+            child: DropdownButtonFormField<String>(
+              isExpanded: true,
+              validator: (value) =>
+                  value == null ? "Please select an option" : null,
+              value: _selectedItem,
+              hint: widget.properties.hintText == null
+                  ? null
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(widget.properties.hintText!),
+                    ),
+              onChanged: (String? newValue) {
+                widget.controller.text = newValue ?? '';
+                setState(() {
+                  _selectedItem = newValue; // Update the selected value
+                });
+              },
+              selectedItemBuilder: (BuildContext context) {
+                return widget.properties.listItems!
                     .map<DropdownMenuItem<String>>((ListItem item) {
                       return DropdownMenuItem<String>(
                         value: item.value.toString(),
-                        child: Text(
-                          item.name,
-                          softWrap: true,
-                          overflow: TextOverflow.visible,
-                          maxLines: null,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            item.name,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       );
                     })
-                    .toList(),
-              ),
+                    .toList();
+              },
+              items: widget.properties.listItems!.map<DropdownMenuItem<String>>(
+                (ListItem item) {
+                  return DropdownMenuItem<String>(
+                    value: item.value.toString(),
+                    child: Text(
+                      item.name,
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                      maxLines: null,
+                    ),
+                  );
+                },
+              ).toList(),
             ),
           ),
         ],
