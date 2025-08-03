@@ -71,10 +71,11 @@ class FormViewPage extends StatelessWidget {
                               return CustomCheckboxListWidget(
                                 fieldProperties: field.properties,
                                 controller: controllerMap[field.key],
+                                isEnable: false,
                               );
-                            }
-                            else if (field.properties.type == 'imageView') {
+                            } else if (field.properties.type == 'imageView') {
                               return ImageListViewWidget(
+                                properties: field.properties,
                                 imageDataList: controllerMap[field.key],
                               );
                             }

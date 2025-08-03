@@ -6,11 +6,13 @@ import 'package:flutter/cupertino.dart';
 class CustomCheckboxListWidget extends StatefulWidget {
   final FieldProperties fieldProperties;
   final List<BoolController> controller;
+  final bool isEnable;
 
   const CustomCheckboxListWidget({
     super.key,
     required this.fieldProperties,
     required this.controller,
+    this.isEnable=true,
   });
 
   @override
@@ -43,6 +45,7 @@ class _CustomCheckboxListWidgetState extends State<CustomCheckboxListWidget> {
             itemBuilder: (context, index) => CustomCheckboxWidget(
               text: widget.fieldProperties.listItems![index].name,
               controller: widget.controller[index],
+              isEnable: widget.isEnable,
             ),
           ),
         ],
