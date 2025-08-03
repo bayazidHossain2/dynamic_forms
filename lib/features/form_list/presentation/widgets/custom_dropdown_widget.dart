@@ -44,8 +44,10 @@ class _CustomDropdownWidgetState extends State<CustomDropdownWidget> {
               borderRadius: const BorderRadius.all(Radius.circular(8)),
             ),
             child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
+              child: DropdownButtonFormField<String>(
                 isExpanded: true,
+                validator: (value) =>
+                    value == null ? "Please select an option" : null,
                 value: _selectedItem,
                 hint: widget.properties.hintText == null
                     ? null

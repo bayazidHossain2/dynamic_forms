@@ -1,63 +1,62 @@
-import 'package:dynamic_forms/core/utils/data_type/number_controller.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' show Radio, Colors;
 
-class CustomRadioButtonWidget extends StatefulWidget {
-  final String label;
-  final bool? isColumn;
-
-  const CustomRadioButtonWidget({
+class CustomRadioButtonWidget extends FormField<int> {
+  CustomRadioButtonWidget({
     super.key,
-    required this.label,
-    this.isColumn,
-  });
+    required String label,
+    bool? isColumn,
+    FormFieldSetter<int>? onSaved,
+    int? initialValue,
+  }) : super(
+         validator: (value) {
+           if (value == null) {
+             return "Please select an option.";
+           }
+           return null;
+         },
+         onSaved: onSaved,
+         initialValue: initialValue,
+         builder: (FormFieldState<int> state) {
+           final options = {1: 'Yes', 2: 'No'};
 
-  @override
-  State<CustomRadioButtonWidget> createState() =>
-      _CustomRadioButtonWidgetState();
-}
+           List<Widget> children = options.entries.map((entry) {
+             return GestureDetector(
+               onTap: () {
+                 state.didChange(entry.key);
+               },
+               child: Row(
+                 children: [
+                   Radio<int>(
+                     value: entry.key,
+                     groupValue: state.value,
+                     onChanged: (val) => state.didChange(val),
+                   ),
+                   Text(entry.value),
+                 ],
+               ),
+             );
+           }).toList();
 
-class _CustomRadioButtonWidgetState extends State<CustomRadioButtonWidget> {
-  final options = {1: 'Yes', 2: 'No'};
-  final controller = NumberController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SmallTitle(title: widget.label),
-        (widget.isColumn == null || widget.isColumn == false)
-            ? Row(children: _getChildern())
-            : Column(children: _getChildern()),
-      ],
-    );
-  }
-
-  List<Widget> _getChildern() {
-    return options.entries.map((e) {
-      return GestureDetector(
-        onTap: () {
-          setState(() {
-            controller.value = e.key;
-          });
-        },
-        child: Row(
-          children: [
-            Radio(
-              value: e.key,
-              groupValue: controller.value,
-              onChanged: (value) {
-                setState(() {
-                  controller.value = value ?? 0;
-                });
-              },
-            ),
-            Text(e.value),
-          ],
-        ),
-      );
-    }).toList();
-  }
+           return Column(
+             crossAxisAlignment: CrossAxisAlignment.start,
+             children: [
+               SmallTitle(title: label),
+               (isColumn == true)
+                   ? Column(children: children)
+                   : Row(children: children),
+               if (state.hasError)
+                 Padding(
+                   padding: const EdgeInsets.only(top: 4.0),
+                   child: Text(
+                     state.errorText ?? '',
+                     style: TextStyle(color: Colors.red[700], fontSize: 12),
+                   ),
+                 ),
+             ],
+           );
+         },
+       );
 }
 
 class SmallTitle extends StatelessWidget {

@@ -1,13 +1,13 @@
 import 'package:dynamic_forms/core/theme/app_pallete.dart';
 import 'package:flutter/material.dart';
 
-class MyButton extends StatelessWidget {
+class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final Color leftColor;
   final Color rightColor;
   final EdgeInsetsGeometry? padding;
-  const MyButton({
+  const CustomButton({
     super.key,
     required this.text,
     required this.onPressed,
