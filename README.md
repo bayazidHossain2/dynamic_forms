@@ -48,7 +48,7 @@ from user input.
 ### 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/dynamic_form_app.git
+git clone https://github.com/bayazidHossain2/dynamic_forms.git
 cd dynamic_form_app
 flutter pub get
 flutter run
